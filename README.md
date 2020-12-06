@@ -14,6 +14,16 @@ Role Variables
 --------------
 TODO
 
+vars_sensitive.yml :
+```
+# Mysql root login info
+database_rootpwd:
+
+# Tinytiny rss info
+database_ttrss_user:
+database_ttrss_pwd:
+database_ttrss_dbname:
+```
 
 Dependencies
 ------------
