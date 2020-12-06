@@ -1,0 +1,86 @@
+---
+# Setup tt-rss files and permissions
+- name: Ensure prerequisites are met
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ prerequisites_packages }}"
+
+- name: Ensure tinytinyrss repo is cloned
+  git:
+    repo: https://git.tt-rss.org/fox/tt-rss.git
+    version: master
+    dest: "{{ webserver_documentroot }}"
+
+- name: Ensure ownership and permission
+  file:
+    path: "{{ webserver_documentroot }}"
+    owner: "{{ webserver_group }}"
+    group: "{{ webserver_group }}"
+    recurse: "yes"
+
+- name: Ensure git dir is not accessible
+  file:
+    path: "{{ webserver_documentroot }}/.git"
+    owner: root
+    group: root
+    mode: 0600
+    recurse: "yes"
+
+- name: Ensure git ignore is not accessible
+  file:
+    path: "{{ webserver_documentroot }}/.gitignore"
+    owner: root
+    group: root
+    mode: 0600
+    recurse: "no"
+
+- name: Ensure tt-rss database is present
+  mysql_db:
+    login_user: "root"
+    login_password: "{{ database_rootpwd }}"
+    name: "{{ database_ttrss_dbname }}"
+    state: present
+
+- name: Ensure database user is present and grants are setup
+  community.mysql.mysql_user:
+    login_user: "root"
+    login_password: "{{ database_rootpwd }}"
+    name: "{{ database_ttrss_user }}"
+    password: "{{ database_ttrss_pwd }}"
+    priv: "{{ database_ttrss_dbname }}.*:ALL"
+    state: present
+
+- name: Ensure default config is absent
+  file:
+    path: "{{ webserver_defautlconfig }}"
+    state: absent
+
+- name: Ensure vhost is present (CentOS)
+  template:
+    src: vhost.conf.j2
+    dest: /etc/httpd/conf.d/tt-rss.conf
+    owner: "{{ webserver_group }}"
+    group: "{{ webserver_group }}"
+    mode: 0640
+  notify: Centos restart webserver
+  when: ansible_os_family == 'RedHat'
+
+- name: Ensure vhost is present (Debian)
+  template:
+    src: vhost.conf.j2
+    dest: /etc/apache2/sites-available/tt-rss.conf
+    owner: "{{ webserver_group }}"
+    group: "{{ webserver_group }}"
+    mode: 0640
+  when: ansible_os_family == 'Debian'
+
+- name: Ensure symbolic link sets in sites-enabled (Debian)
+  file:
+    src: /etc/apache2/sites-available/tt-rss.conf
+    dest: /etc/apache2/sites-enabled/tt-rss.conf
+    owner: "{{ webserver_group }}"
+    group: "{{ webserver_group }}"
+    state: link
+  notify: Debian restart webserver
+  when: ansible_os_family == 'Debian'

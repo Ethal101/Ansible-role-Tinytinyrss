@@ -1,0 +1,16 @@
+---
+# vars for Debian based distribution
+
+## Packages
+php_mysql_packagename: php-mysql
+
+## Web server vars
+webserver_package: apache2
+webserver_servicename: apache2
+webserver_group: www-data
+webserver_confpath: /etc/apache2/sites-enabled/ttrss.conf
+webserver_documentroot: /var/www/html/tt-rss
+webserver_defautlconfig: /etc/apache2/sites-enabled/000-default.conf
+
+## database vars
+database_servicename: mysql

@@ -1,0 +1,45 @@
+---
+# Database hardening
+- name: Ensure pymysql is present
+  pip:
+    name: pymysql
+    state: present
+
+# Set root credentials for for RedHat based distrib
+- name: Check root credentials
+  block:
+  - name: Ensure credentials are sets for root
+    mysql_user:
+      login_user: "root" # login as root
+      login_password: "{{ database_rootpwd }}" # default blank password
+      name: "root"
+      password: "{{ database_rootpwd }}" # new passwords
+      priv: '*.*:ALL,GRANT'
+      state: present
+  rescue:
+  - name: Ensure mysql_native_password is set
+    shell: mysql -u root -e 'UPDATE mysql.user SET plugin = "mysql_native_password";'
+  - name: Flush Privileges
+    shell: mysql -u root -e 'FLUSH PRIVILEGES'
+  - name: Ensure root credentials and grants are sets
+    mysql_user:
+      login_user: "root" # login as root
+      login_password: "" # default blank password
+      name: "root" # set a new password for root
+      password: "{{ database_rootpwd }}" # new passwords
+      priv: '*.*:ALL,GRANT'
+      state: "present"
+
+- name: Ensure anonymous users are removed
+  mysql_user:
+    login_user: "root"
+    login_password: "{{ database_rootpwd }}"
+    name: ""
+    state: absent
+
+- name: Ensure test database is removed
+  mysql_db:
+    login_user: "root"
+    login_password: "{{ database_rootpwd }}"
+    name: "test"
+    state: absent

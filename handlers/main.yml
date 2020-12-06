@@ -1,0 +1,11 @@
+---
+# handlers file for tinytinyrss
+- name: Debian restart webserver
+  sysvinit:
+    name: "{{ webserver_servicename }}"
+    state: restarted
+
+- name: Centos restart webserver
+  systemd:
+    name: "{{ webserver_servicename }}"
+    state: restarted

@@ -1,0 +1,33 @@
+---
+# Include OS specific vars
+- include_vars: 'vars_debian.yml'
+  when: ansible_os_family == 'Debian'
+
+- include_vars: 'vars_centos.yml'
+  when: ansible_os_family == 'RedHat'
+
+# Include sensitives variables (ansible-vault)
+- include_vars: 'vars_sensitive.yml'
+
+# Include tinytinyrss tasks
+
+## Install Web server
+- include_tasks: webserver_install.yml
+
+## TODO Configure Web server
+## TODO Hardening Web server
+
+## Install database
+- include_tasks: database_install.yml
+
+## TODO Hardening database
+- include_tasks: database_hardening.yml
+
+## TODO Install tinytinyrss 
+- include_tasks: tinytinyrss_install.yml
+
+## TODO : Check for update to "Service is in unknown state" bug : https://github.com/ansible/ansible/issues/71528
+## TODO : RSS feed update with cron job
+## TODO : TLS certificate / LetsEncrypt
+## TODO Backup tasks
+## TODO Update tasks

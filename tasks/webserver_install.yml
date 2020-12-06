@@ -1,0 +1,28 @@
+---
+- name: Ensure package cache is up-to-date for Debian distrib
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+  when: ansible_os_family == "Debian"
+
+  # Task file for mywebapp
+- name: Ensure web server is installed
+  package:
+    name: "{{ webserver_package }}"
+    state: present
+
+## Bypass "Service is in unknown state" or "pdate-rc.d: error"
+- name: Ensure web server is started on Debian
+  sysvinit:
+    name: "{{ webserver_servicename }}"
+    state: started
+    enabled: yes
+  when: ansible_os_family == 'Debian'
+
+## Bypass "Service is in unknown state" or "pdate-rc.d: error"
+- name: Ensure web server is started on CentOS
+  systemd:
+    name: "{{ webserver_servicename }}"
+    state: started
+    enabled: yes
+  when: ansible_os_family == 'RedHat'

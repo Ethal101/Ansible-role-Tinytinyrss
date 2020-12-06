@@ -1,0 +1,12 @@
+NameVirtualHost {{ webserver_namevirtualhost }}
+<VirtualHost *:80>
+    ServerAdmin {{ webserver_serveradmin }}
+ 	ServerName {{ webserver_servername }}
+ 	DocumentRoot {{ webserver_documentroot }}
+ 	<Directory {{ webserver_documentroot }}>
+ 		Options FollowSymLinks
+ 		AllowOverride None
+ 		Order allow,deny
+ 		allow from all
+ 	</Directory>
+</VirtualHost>

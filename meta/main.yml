@@ -1,0 +1,20 @@
+galaxy_info:
+  author: Ethal101
+  description: Playbook pour TinyTinyRss
+  company: Ethal101
+
+  license: MIT
+
+  min_ansible_version: 2.1
+
+  platforms:
+    - name: debstretch
+      versions:
+      - 9
+    - name: centos8
+      versions:
+      - 8
+
+  galaxy_tags: []
+
+dependencies: []

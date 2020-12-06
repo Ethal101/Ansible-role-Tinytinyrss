@@ -1,0 +1,22 @@
+# Molecule managed
+
+---
+# Web server 
+## On vérifier que le port 80 est en écoute
+#port:
+#  tcp:80:
+#    listening: true
+
+## On vérifier que le serveur envoit une 200 et si on trouve la string "hello" dans le corps de la page
+#http:
+#  http://localhost:80/index.html:
+#    status: 200
+#    body: [Hello]
+
+## On vérifier la présence d'un fichier html
+#file:
+#  /var/www/html/index.html:
+#    exists: true
+#    mode: "0640"
+
+# Database 

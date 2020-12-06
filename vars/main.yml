@@ -1,0 +1,17 @@
+---
+## database vars
+database_package: mariadb-server
+
+# Prerequisites for tt-rss
+prerequisites_packages:
+- git
+- php 
+- php-gd 
+- php-mbstring 
+- php-common  
+- php-xml  
+- php-curl
+- php-json
+- php-pdo
+- "{{ php_mysql_packagename }}"
+- php-intl

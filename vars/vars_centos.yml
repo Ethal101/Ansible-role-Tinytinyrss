@@ -1,0 +1,16 @@
+---
+# vars for RedHat based distribution
+
+## Packages
+php_mysql_packagename: php-mysqlnd
+
+## Web server vars
+webserver_package: httpd
+webserver_servicename: httpd
+webserver_group: apache
+webserver_confpath: /etc/httpd/conf.d/ttrss.conf
+webserver_documentroot: /var/www/tt-rss
+webserver_defautlconfig: /etc/httpd/conf.d/welcome.conf
+
+## database vars
+database_servicename: mariadb

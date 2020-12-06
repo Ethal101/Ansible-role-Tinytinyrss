@@ -1,0 +1,27 @@
+---
+- name: Ensure package cache is up-to-date for Debian distrib
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+  when: ansible_os_family == "Debian"
+
+- name: Ensure database is installed
+  package:
+    name: "{{ database_package }}"
+    state: present
+
+## Bypass "Service is in unknown state" or "pdate-rc.d: error"
+- name: Ensure database is started on Debian
+  sysvinit:
+    name: "{{ database_servicename }}"
+    state: started
+    enabled: yes
+  when: ansible_os_family == 'Debian'
+
+## Bypass "Service is in unknown state" or "pdate-rc.d: error"
+- name: Ensure database is started on CentOS
+  systemd:
+    name: "{{ database_servicename }}"
+    state: started
+    enabled: yes
+  when: ansible_os_family == 'RedHat'
